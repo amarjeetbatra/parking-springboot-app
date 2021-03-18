@@ -66,10 +66,24 @@ public class ParkingService {
 		return null;
 	}
 	
+	public Booking getBookingById(int id) {
+		for (Booking booking : bookings) {
+			if (booking.getId() == id) {
+				return booking;
+			}
+		}
+		return null;
+	}
+	
 	public List<Booking> initializeAllBookings() {
-		// We create bookings for next 30 days only for now for each Parking
 		
-		for (int i = 0; i < 30; i++) {
+		// If already created then we just return it.
+		if (bookings.size() > 0) {
+			return bookings;
+		}
+		// We create bookings for next 15 days only for now for each Parking
+		
+		for (int i = 0; i < 15; i++) {
 			for (Parking parking : parkings) {
 				Calendar calendar = Calendar.getInstance();
 				calendar.add(Calendar.DAY_OF_MONTH, i);
@@ -80,4 +94,33 @@ public class ParkingService {
 		
 		return bookings;
 	}
+	
+	public List<Booking> getBookingsForUser(String userName) {
+		
+		List<Booking> bookingsForUser = new ArrayList<>();
+		
+		// Initialize bookings if not yet done
+		initializeAllBookings();
+		
+		for (Booking booking : bookings) {
+			if (booking.getUser().getAcronym().equals(userName)) {
+				bookingsForUser.add(booking);
+			}
+		}
+		
+		return bookingsForUser;
+	}
+	
+	public List<Booking> getAllBookingsForUser(User user) {
+		List<Booking> bookingsForUser = new ArrayList<>();
+		for (Booking booking : bookings) {
+			if (booking.getUser() != null && booking.getUser().getId() == user.getId()) {
+				bookingsForUser.add(booking);
+			}
+		}
+		
+		return bookingsForUser;
+	}
+	
+	
 }
